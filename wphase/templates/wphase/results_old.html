@@ -1,0 +1,168 @@
+<h1> Results for your research </h1>
+
+{% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+
+{% if es_results.events %}
+    <p> Events </p>
+    <ul>
+    {% for event in es_results.events %}
+        <li><a href="{% url 'wphase:event' event.eventid %}">{{ event }}</a>
+            {% if es_results.display_event != "name_list" %}
+                {% for data in es_results.options_event %}
+                    {% if data == "date" or es_results.display_event == "all_data" %}
+                    <h6> Origin Time </h6>
+                    <p> EPI_year      : {{ event.epi_year }} </p>
+                    <p> EPI_month     : {{ event.epi_month }} </p>
+                    <p> EPI_day       : {{ event.epi_day }} </p>
+                    <p> EPI_hour      : {{ event.epi_hour }} </p>
+                    <p> EPI_minute    : {{ event.epi_minute }} </p>
+                    <p> EPI_second    : {{ event.epi_second }} </p>
+                    {% endif %}
+                    {% if data == "geography" or es_results.display_event == "all_data" %}
+                    <h6> Hypocenter </h6>
+                    <p> EPI_latitude  : {{ event.epi_latitude }} </p>
+                    <p> EPI_longitude : {{ event.epi_longitude }} </p>
+                    <p> EPI_depth     : {{ event.epi_depth }} </p>
+                    <p> EPI_region    : {{ event.epi_region }} </p>
+                    {% endif %}
+                    {% if es_results.display_event == "all_data" %}
+                    <h6> Agency </h6>
+                    <p> EPI_agency    : {{ event.epi_agency }} </p>
+                    <h6> Magnitude </h6>
+                    <p> EPI_M1        : {{ event.epi_m1 }} </p>
+                    <p> EPI_M2        : {{ event.epi_m2 }} </p>
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+
+            {%if es_results.display_solution != "none" %}
+            <p> Solutions </p>
+                <ul>
+                {% for sol in es_results.solutions %}
+                    {% if sol.event == event%}
+                        {% for type in es_results.types_solution %}
+                        {% if type in sol.status or type == "all" or type == "preferred" %}
+                            <li><a href="{% url 'wphase:solution' sol.id %}">{{ sol }}</a>
+                            {%if es_results.display_solution == "selected_data" %}
+                                {% for data in es_results.options_solution %}
+                                    {% if data == "geninfo" %}
+                                    <h6> General Information </h6>
+                                    <p> Status       : {{ sol.status }} </p>
+                                    <p> Code version : {{ sol.code_version }} </p>
+                                    <p> GF_PATH      : {{ sol.gf_path }} </p>
+                                    {% elif data == "cmtw" %}
+                                    <h6> Centroid Moment Tensor WCMT </h6>
+                                    <p> W_Mrr           : {{ sol.w_mrr }} </p>
+                                    <p> W_Mtt           : {{ sol.w_mtt }} </p>
+                                    <p> W_Mpp           : {{ sol.w_mpp }} </p>
+                                    <p> W_Mrt           : {{ sol.w_mrt }} </p>
+                                    <p> W_Mrp           : {{ sol.w_mrp }} </p>
+                                    <p> W_Mtp           : {{ sol.w_mtp }} </p>
+                                    <p> W_time_shift    : {{ sol.w_time_shift }} </p>
+                                    <p> W_half_duration : {{ sol.w_half_duration }} </p>
+                                    <p> W_latitude      : {{ sol.w_latitude }} </p>
+                                    <p> W_longitude     : {{ sol.w_longitude }} </p>
+                                    <p> W_depth         : {{ sol.w_depth }} </p>
+                                    <p> W_M0            : {{ sol.w_m0 }} </p>
+                                    <p> W_Mw            : {{ sol.w_mw }} </p>
+                                    <p> DC_FLAG         : {{ sol.w_dc_flag }} </p>
+                                    {% elif data == "bnpw" %}
+                                    <h6> Best nodal planes WCMT </h6>
+                                    <p> W_NP1_strike : {{ sol.w_np1_strike }} </p>
+                                    <p> W_NP1_dip    : {{ sol.w_np1_dip }} </p>
+                                    <p> W_NP1_rake   : {{ sol.w_np1_rake }} </p>
+                                    <p> W_NP2_strike : {{ sol.w_np2_strike }} </p>
+                                    <p> W_NP2_dip    : {{ sol.w_np2_dip }} </p>
+                                    <p> W_NP2_rake   : {{ sol.w_np2_rake }} </p>
+                                    {% elif data == "eigw" %}
+                                    <h6> Eigenvalues WCMT </h6>
+                                    <p> W_eig1 : {{ sol.w_eig1 }} </p>
+                                    <p> W_eig2 : {{ sol.w_eig2 }} </p>
+                                    <p> W_eig3 : {{ sol.w_eig3 }} </p>
+                                    {% elif data == "cmtr" %}
+                                    <h6> Centroid Moment Tensor RCMT </h6>
+                                    <p> R_Mrr           : {{ sol.r_mrr }} </p>
+                                    <p> R_Mtt           : {{ sol.r_mtt }} </p>
+                                    <p> R_Mpp           : {{ sol.r_mpp }} </p>
+                                    <p> R_Mrt           : {{ sol.r_mrt }} </p>
+                                    <p> R_Mrp           : {{ sol.r_mrp }} </p>
+                                    <p> R_Mtp           : {{ sol.r_mtp }} </p>
+                                    <p> R_time_shift    : {{ sol.r_time_shift }} </p>
+                                    <p> R_half_duration : {{ sol.r_half_duration }} </p>
+                                    <p> R_latitude      : {{ sol.r_latitude }} </p>
+                                    <p> R_longitude     : {{ sol.r_longitude }} </p>
+                                    <p> R_depth         : {{ sol.r_depth }} </p>
+                                    <p> R_M0            : {{ sol.r_m0 }} </p>
+                                    <p> R_Mw            : {{ sol.r_mw }} </p>
+                                    {% elif data == "bnpr" %}
+                                    <h6> Best nodal planes RCMT </h6>
+                                    <p> R_NP1_strike : {{ sol.r_np1_strike }} </p>
+                                    <p> R_NP1_dip    : {{ sol.r_np1_dip }} </p>
+                                    <p> R_NP1_rake   : {{ sol.r_np1_rake }} </p>
+                                    <p> R_NP2_strike : {{ sol.r_np2_strike }} </p>
+                                    <p> R_NP2_dip    : {{ sol.r_np2_dip }} </p>
+                                    <p> R_NP2_rake   : {{ sol.r_np2_rake }} </p>
+                                    {% elif data == "eigr" %}
+                                    <h6> Eigenvalues RCMT </h6>
+                                    <p> R_eig1 : {{ sol.r_eig1 }} </p>
+                                    <p> R_eig2 : {{ sol.r_eig2 }} </p>
+                                    <p> R_eig3 : {{ sol.r_eig3 }} </p>
+                                    {% elif data == "filt" %}
+                                    <h6> Filter parameters </h6>
+                                    <p> filt_order : {{ sol.filt_order }} </p>
+                                    <p> filt_cf1   : {{ sol.filt_cf1 }} </p>
+                                    <p> filt_cf2   : {{ sol.filt_cf2 }} </p>
+                                    <p> filt_pass  : {{ sol.filt_pass }} </p>
+                                    {% elif data == "screen" %}
+                                    <h6> Screening parameters </h6>
+                                    <p> med_val : {{ sol.med_val }} </p>
+                                    <p> p2p_med : {{ sol.p2p_med }} </p>
+                                    <p> p2p_min : {{ sol.p2p_min }} </p>
+                                    <p> p2p_max : {{ sol.p2p_max }} </p>
+                                    <p> average : {{ sol.average }} </p>
+                                    {% elif data == "data" %}
+                                    <h6> Used data </h6>
+                                    <p> nb_stations          : {{ sol.nb_stations }} </p>
+                                    <p> nb_channels          : {{ sol.nb_channels }} </p>
+                                    <p> nb_rejected_channels : {{ sol.nb_reected_channels }} </p>
+                                    <p> stations             : {{ sol.stations }} </p>
+                                    <p> WPWIN                : {{ sol.wpwin }} </p>
+                                    <p> Dmin                 : {{ sol.dmin }} </p>
+                                    <p> Dmax                 : {{ sol.dmax }} </p>
+                                    <p> wN                   : {{ sol.wn }} </p>
+                                    <p> wE                   : {{ sol.we }} </p>
+                                    <p> wZ                   : {{ sol.wz }} </p>
+                                    {% elif data == "inv" %}
+                                    <h6> Inversion parameters </h6>
+                                    <p> command_line : {{ sol.command_line }} </p>
+                                    <p> ref_solution : {{ sol.ref_solution }} </p>
+                                    <p> cond_thre    : {{ sol.cond_thre }} </p>
+                                    <p> damp_fac     : {{ sol.damp_fac }} </p>
+                                    {% elif data == "qc" %}
+                                    <h6> Quality control </h6>
+                                    <p> WRMS        : {{ sol.wrms }} </p>
+                                    <p> WRMS_r      : {{ sol.wmrs_r }} </p>
+                                    <p> Gap         : {{ sol.gap }} </p>
+                                    <p> Cond_number : {{ sol.cond_number }} </p>
+                                    <p> RRMS        : {{ sol.rrms }} </p>
+                                    <p> RRMS_r      : {{ sol.rrms_r }} </p>
+                                    {% endif %} 
+                                {% endfor %}
+                            {% endif %}
+                            </li>
+                        {% endif %}
+                        {% endfor %}
+                    {% endif %}
+                {% endfor %}
+                </ul>
+            {% endif %}
+        </li>
+    {% endfor %}
+    </ul>
+
+{% else %}
+<p> Nothing corresponds to your research.</p>
+{% endif %}
+
+<p><a href="{% url 'wphase:search_form' %}"> Make a new research </a></p>
+<h3><a href="{% url 'wphase:index' %}"> Back to index </a></h3>

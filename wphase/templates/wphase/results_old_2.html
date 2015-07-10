@@ -1,0 +1,211 @@
+<h1> Results for your research </h1>
+
+{% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+
+{% if es_results.events %}
+    {% if es_results.output_format == "cmtsolution" %}
+    <h2> CMTSOLUTION </h2>
+    {% elif es_results.output_format == "full" %}
+    <h2> FULL FORMAT </h2>
+    {% elif es_results.output_format == "data" %}
+    <h2>USED DATA </h2>
+    {% elif es_results.output_format == "std" %}
+    <h2>STANDARD </h2>
+    {% endif %}
+    <a href="{% url 'wphase:generate_txt' es_results.sol_ids %}"> Save as .txt (CMTSOLUTIONS)</a>
+    <ul>
+    {% for sol in es_results.solutions %}
+        {% for type in es_results.types_solution %}
+        {% if type in sol.status or type == "all" or type == "preferred" %}
+            <li><a href="{% url 'wphase:solution' sol.id %}">{{ sol }}</a>
+            {% if es_results.output_format == "cmtsolution" %}
+                <pre>
+{{ sol.event.capsule }}
+event name    : {{ sol.event.eventid }}
+time shift    : {{ sol.w_time_shift }}
+half duration : {{ sol.w_half_duration }}
+latitude      : {{ sol.w_latitude }}
+longitude     : {{ sol.w_longitude }}
+depth         : {{ sol.w_depth }}
+Mrr           : {{ sol.w_mrr }}
+Mtt           : {{ sol.w_mtt }}
+Mpp           : {{ sol.w_mpp }}
+Mrt           : {{ sol.w_mrt }}
+Mrp           : {{ sol.w_mrp }}
+Mtp           : {{ sol.w_mtp }}
+                </pre>
+            {% elif es_results.output_format == "full" %}
+            <table border-collapse=collapse border=1px>
+            <tr><th> Hypocenter Information </th></tr>
+            <tr><th> Agency </th><td> {{ sol.event.epi_agency }} </td></tr>
+            <tr><th> Year </th><td> {{ sol.event.epi_year }} </td></tr>
+            <tr><th> Month </th><td> {{ sol.event.epi_month }} </td></tr>
+            <tr><th> Day </th><td> {{ sol.event.epi_day }} </td></tr>
+            <tr><th> Hour </th><td> {{ sol.event.epi_hour }} </td></tr>
+            <tr><th> Minute </th><td> {{ sol.event.epi_minute }} </td></tr>
+            <tr><th> Second </th><td> {{ sol.event.epi_second }} </td></tr>
+            <tr><th> Latitude </th><td> {{ sol.event.epi_latitude }} </td></tr>
+            <tr><th> Longitude </th><td> {{ sol.event.epi_longitude }} </td></tr>
+            <tr><th> Depth </th><td> {{ sol.event.epi_depth }} </td></tr>
+            <tr><th> M1 </th><td> {{ sol.event.epi_m1 }} </td></tr>
+            <tr><th> M2 </th><td> {{ sol.event.epi_m2 }} </td></tr>
+            <tr><th> Region </th><td> {{ sol.event.epi_region }} </td></tr>
+
+            <tr><th> General Solution Information </th></tr>
+            <tr><th> Status </th><td> {{ sol.status }} </td></tr>
+            <tr><th> Code version </th><td> {{ sol.code_version }} </td></tr>
+            <tr><th> GF_PATH </th><td> {{ sol.gf_path }} </td></tr>
+
+            <tr><th> Centroid Moment Tensor WCMT </th></tr>
+            <tr><th> W_Mrr </th><td> {{ sol.w_mrr }} </td></tr>
+            <tr><th> W_Mtt </th><td> {{ sol.w_mtt }} </td></tr>
+            <tr><th> W_Mpp </th><td> {{ sol.w_mpp }} </td></tr>
+            <tr><th> W_Mrt </th><td> {{ sol.w_mrt }} </td></tr>
+            <tr><th> W_Mrp </th><td> {{ sol.w_mrp }} </td></tr>
+            <tr><th> W_Mtp </th><td> {{ sol.w_mtp }} </td></tr>
+            <tr><th> W_time_shift </th><td> {{ sol.w_time_shift }} </td></tr>
+            <tr><th> W_half_duration </th><td> {{ sol.w_half_duration }} </td></tr>
+            <tr><th> W_latitude </th><td> {{ sol.w_latitude }} </td></tr>
+            <tr><th> W_longitude </th><td> {{ sol.w_longitude }} </td></tr>
+            <tr><th> W_depth </th><td> {{ sol.w_depth }} </td></tr>
+            <tr><th> W_M0 </th><td> {{ sol.w_m0 }} </td></tr>
+            <tr><th> W_Mw </th><td> {{ sol.w_mw }} </td></tr>
+            <tr><th> DC_FLAG </th><td> {{ sol.w_dc_flag }} </td></tr>
+
+            <tr><th> Best nodal planes WCMT </th></tr>
+            <tr><th> W_NP1_strike </th><td> {{ sol.w_np1_strike }} </td></tr>
+            <tr><th> W_NP1_dip </th><td> {{ sol.w_np1_dip }} </td></tr>
+            <tr><th> W_NP1_rake </th><td> {{ sol.w_np1_rake }} </td></tr>
+            <tr><th> W_NP2_strike </th><td> {{ sol.w_np2_strike }} </td></tr>
+            <tr><th> W_NP2_dip </th><td> {{ sol.w_np2_dip }} </td></tr>
+            <tr><th> W_NP2_rake </th><td> {{ sol.w_np2_rake }} </td></tr>
+
+            <tr><th> Eigenvalues WCMT </th></tr>
+            <tr><th> W_eig1 </th><td> {{ sol.w_eig1 }} </td></tr>
+            <tr><th> W_eig2 </th><td> {{ sol.w_eig2 }} </td></tr>
+            <tr><th> W_eig3 </th><td> {{ sol.w_eig3 }} </td></tr>
+
+            <tr><th> Centroid Moment Tensor RCMT </th></tr>
+            <tr><th> R_Mrr </th><td> {{ sol.r_mrr }} </td></tr>
+            <tr><th> R_Mtt </th><td> {{ sol.r_mtt }} </td></tr>
+            <tr><th> R_Mpp </th><td> {{ sol.r_mpp }} </td></tr>
+            <tr><th> R_Mrt </th><td> {{ sol.r_mrt }} </td></tr>
+            <tr><th> R_Mrp </th><td> {{ sol.r_mrp }} </td></tr>
+            <tr><th> R_Mtp </th><td> {{ sol.r_mtp }} </td></tr>
+            <tr><th> R_time_shift </th><td> {{ sol.r_time_shift }} </td></tr>
+            <tr><th> R_half_duration </th><td> {{ sol.r_half_duration }} </td></tr>
+            <tr><th> R_latitude </th><td> {{ sol.r_latitude }} </td></tr>
+            <tr><th> R_longitude </th><td> {{ sol.r_longitude }} </td></tr>
+            <tr><th> R_depth </th><td> {{ sol.r_depth }} </td></tr>
+            <tr><th> R_M0 </th><td> {{ sol.r_m0 }} </td></tr>
+            <tr><th> R_Mw </th><td> {{ sol.r_mw }} </td></tr>
+
+            <tr><th> Best nodal planes RCMT </th></tr>
+            <tr><th> R_NP1_strike </th><td> {{ sol.r_np1_strike }} </td></tr>
+            <tr><th> R_NP1_dip </th><td> {{ sol.r_np1_dip }} </td></tr>
+            <tr><th> R_NP1_rake </th><td> {{ sol.r_np1_rake }} </td></tr>
+            <tr><th> R_NP2_strike </th><td> {{ sol.r_np2_strike }} </td></tr>
+            <tr><th> R_NP2_dip </th><td> {{ sol.r_np2_dip }} </td></tr>
+            <tr><th> R_NP2_rake </th><td> {{ sol.r_np2_rake }} </td></tr>
+
+            <tr><th> Eigenvalues RCMT </th></tr>
+            <tr><th> R_eig1 </th><td> {{ sol.r_eig1 }} </td></tr>
+            <tr><th> R_eig2 </th><td> {{ sol.r_eig2 }} </td></tr>
+            <tr><th> R_eig3 </th><td> {{ sol.r_eig3 }} </td></tr>
+
+            <tr><th> Filter parameters </th></tr>
+            <tr><th> filt_order </th><td> {{ sol.filt_order }} </td></tr>
+            <tr><th> filt_cf1 </th><td> {{ sol.filt_cf1 }} </td></tr>
+            <tr><th> filt_cf2 </th><td> {{ sol.filt_cf2 }} </td></tr>
+            <tr><th> filt_pass </th><td> {{ sol.filt_pass }} </td></tr>
+
+            <tr><th> Screening parameters </th></tr>
+            <tr><th> med_val </th><td> {{ sol.med_val }} </td></tr>
+            <tr><th> p2p_med </th><td> {{ sol.p2p_med }} </td></tr>
+            <tr><th> p2p_min </th><td> {{ sol.p2p_min }} </td></tr>
+            <tr><th> p2p_max </th><td> {{ sol.p2p_max }} </td></tr>
+            <tr><th> average </th><td> {{ sol.average }} </td></tr>
+
+            <tr><th> Screening parameters </th></tr>
+            <tr><th> nb_stations </th><td> {{ sol.nb_stations }} </td></tr>
+            <tr><th> nb_channels </th><td> {{ sol.nb_channels }} </td></tr>
+            <tr><th> nb_rejected_channels </th><td> {{ sol.nb_rejected_channels }} </td></tr>
+            <tr><th> stations </th><td> {{ stations }} </td></tr>
+            <tr><th> WPWIN </th><td> {{ sol.wpwin }} </td></tr>
+            <tr><th> Dmin </th><td> {{ sol.dmin }} </td></tr>
+            <tr><th> Dmax </th><td> {{ sol.dmax }} </td></tr>
+            <tr><th> wN </th><td> {{ sol.wn }} </td></tr>
+            <tr><th> wE </th><td> {{ sol.we }} </td></tr>
+            <tr><th> wZ </th><td> {{ sol.wz }} </td></tr>
+
+            <tr><th> Inversion parameters </th></tr>
+            <tr><th> command_line </th><td> {{ sol.command_line }} </td></tr>
+            <tr><th> ref_solution </th><td> {{ sol.ref_solution }} </td></tr>
+            <tr><th> cond_thre </th><td> {{ sol.cond_thre }} </td></tr>
+            <tr><th> damp_fac </th><td> {{ sol.damp_fac }} </td></tr>
+
+            <tr><th> Quality control </th></tr>
+            <tr><th> WRMS </th><td> {{ sol.wrms }} </td></tr>
+            <tr><th> WRMS_r </th><td> {{ sol.wmrs_r }} </td></tr>
+            <tr><th> Gap </th><td> {{ sol.gap }} </td></tr>
+            <tr><th> Cond_number </th><td> {{ cond_number }} </td></tr>
+            <tr><th> RRMS </th><td> {{ sol.rrms }} </td></tr>
+            <tr><th> RRMS_r </th><td> {{ sol.rrms_r }} </td></tr>
+            </table> 
+
+            {% elif es_results.output_format == "data" %}
+            <table border-collapse=collapse border=1px>
+            <tr><th> Nb stations </th><td> {{ sol.nb_stations }} </td></tr>
+            <tr><th> Nb channels </th><td> {{ sol.nb_channels }} </td></tr>
+            <tr><th> Nb rejected channels </th><td> {{ sol.nb_rejected_channels }} </td></tr>
+            <tr><th> Stations </th><td> {{ sol.stations }} </td></tr>
+            <tr><th> WPWIN </th><td> {{ sol.wpwin }} </td></tr>
+            <tr><th> Dmin </th><td> {{ sol.dmin }} </td></tr>
+            <tr><th> Dmax </th><td> {{ sol.dmax }} </td></tr>
+            <tr><th> wN </th><td> {{ sol.wn }} </td></tr>
+            <tr><th> wE </th><td> {{ sol.we }} </td></tr>
+            <tr><th> wZ </th><td> {{ sol.wz }} </td></tr>
+            </table>
+            {% elif es_results.output_format == "std" %}
+                <pre>
+<img align=right width=75 height=75  src="/media/{{ sol.event_id }}_{{ sol.status }}.png">
+Date: {{sol.event.date|date:"Y/m/d" }}
+Origin time:    {{sol.event.date|date:"H:i:s" }}
+Centroid Time:  {{ sol.get_centroid_time|date:"H:i:s" }}
+Lat= {{ sol.w_latitude|center:"8" }}    Lon= {{ sol.w_longitude|center:"8" }}
+Depth= {{ sol.w_depth|center:"8" }}  Half duration= {{ sol.w_half_duration|center:"8" }}
+Moment Tensor: 
+rr = {{ sol.w_mrr|center:"14" }}    tt = {{ sol.w_mtt|center:"14" }}    pp = {{ sol.w_mpp|center:"14" }}   
+rt = {{ sol.w_mrt|center:"14" }}    rp = {{ sol.w_mrp|center:"14" }}    tp = {{ sol.w_mtp|center:"14" }} 
+Mw = {{ sol.w_mw }}     Scalar Moment = {{ sol.w_m0 }}
+Fault plane:  strike={{ sol.w_np1_strike|center:"6" }}   dip={{ sol.w_np1_dip|center:"6" }}   rake={{ sol.w_np1_rake|center:"6" }} 
+Fault plane:  strike={{ sol.w_np2_strike|center:"6" }}   dip={{ sol.w_np2_dip|center:"6" }}   rake={{ sol.w_np2_rake|center:"6" }} 
+                </pre>
+            {% endif %}
+        {% endif %}
+        {% endfor %}
+    {% endfor %}
+    </ul>
+
+<div class="pagination">
+<span class="step-links">
+    {% if es_results.pag.has_previous %}
+        <a href="?page={{ es_results.pag.previous_page_number }}">previous</a>
+    {% endif %}
+
+    <span class="current">
+        Page {{ es_results.pag.number }} of {{ es_results.pag.paginator.num_pages }}.
+    </span>
+
+    {% if es_results.pag.has_next %}
+        <a href="?page={{ es_results.pag.next_page_number }}">next</a>
+    {% endif %}
+</span>
+</div>
+
+{% else %}
+<p> Nothing corresponds to your research.</p>
+{% endif %}
+
+<p><a href="{% url 'wphase:search_form' %}"> Make a new research </a></p>
+<h3><a href="{% url 'wphase:index' %}"> Back to index </a></h3>

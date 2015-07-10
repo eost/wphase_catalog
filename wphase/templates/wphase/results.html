@@ -1,0 +1,282 @@
+<h1> Results for your research </h1>
+<div>
+    {% if user.is_anonymous %}
+    <a href="{% url 'django.contrib.auth.views.login' %}">Log in</a>
+    {% else %}
+    <a href="{% url 'wphase:my_logout' %}">Log out</a>
+    {% endif %}
+</div>
+<p><a href="{% url 'wphase:search_form' %}"> Make a new research </a></p>
+{% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+<div>
+{% if s_results %}
+    {% if request.session.output_format == "cmtsolution" %}
+    <h2> CMTSOLUTION FORMAT</h2>
+    {% elif request.session.output_format == "full" %}
+    <h2> FULL FORMAT </h2>
+    {% elif request.session.output_format == "data" %}
+    <h2>USED DATA </h2>
+    {% elif request.session.output_format == "std" %}
+    <h2>STANDARD FORMAT </h2>
+    {% endif %}
+    <a href="{% url 'wphase:generate_txt' request.session.sol_ids %}"> Save as .txt (CMTSOLUTIONS)</a>
+    {% for sol in s_results %}
+        {% for type in request.session.types_solution %}
+        {% if type in sol.status or type == "all" or type == "preferred" %}
+            <br><br>
+            <b> {{ sol.event.eventid }} {{ sol.event.epi_region }} </b>
+            {% if request.session.output_format == "cmtsolution" %}
+                <pre>
+{{ sol.event.capsule }}
+event name    : {{ sol.event.eventid }}
+time shift    : {{ sol.w_time_shift }}
+half duration : {{ sol.w_half_duration }}
+latitude      : {{ sol.w_latitude }}
+longitude     : {{ sol.w_longitude }}
+depth         : {{ sol.w_depth }}
+Mrr           : {{ sol.w_mrr }}
+Mtt           : {{ sol.w_mtt }}
+Mpp           : {{ sol.w_mpp }}
+Mrt           : {{ sol.w_mrt }}
+Mrp           : {{ sol.w_mrp }}
+Mtp           : {{ sol.w_mtp }}
+                </pre>
+            {% elif request.session.output_format == "full" %}
+            <br><br>
+            <table border-collapse=collapse border=1px width=100% style="margin-bottom:25px">
+            <tr><th colspan=2 bgcolor="#87CEFA"> Hypocenter Information </th></tr>
+            {% if request.user.is_authenticated %}
+            <tr><td> Agency </td><td> {{ sol.event.epi_agency }} </td></tr>
+            {% endif %}
+            <tr><td width=25%> Date </td><td width=75%> {{ sol.event.date|date:"Y/m/d" }} </td></tr>
+            <tr><td> Origin Time </td><td> {{ sol.event.date|date:"H:i:s" }} </td></tr>
+            <tr><td> Epicenter Latitude </td><td> {{ sol.event.epi_latitude }} </td></tr>
+            <tr><td> Epicenter Longitude </td><td> {{ sol.event.epi_longitude }} </td></tr>
+            <tr><td> Epicenter Depth </th><td> {{ sol.event.epi_depth }} </td></tr>
+            {% if request.user.is_authenticated %}
+            <tr><td> M1 </td><td> {{ sol.event.epi_m1 }} </td></tr>
+            <tr><td> M2 </td><td> {{ sol.event.epi_m2 }} </td></tr>
+            {% endif %}
+            <tr><td> Region </td><td> {{ sol.event.epi_region }} </td></tr>
+
+            <tr><th colspan=2 bgcolor="#87CEFA"> General Solution Information </th></tr>
+            <tr><td> Status </td><td> {{ sol.status }} </td></tr>
+            <tr><td> Code version </td><td> {{ sol.code_version }} </td></tr>
+            {% if request.user.is_authenticated %}
+            <tr><td> GF_PATH </td><td> {{ sol.gf_path }} </td></tr>
+            {% endif %}            
+
+            <tr><th colspan=2 bgcolor="#87CEFA"> Flags </th></tr>
+            <tr><td> o_covf </td><td> {{ sol.o_covf }} </td></tr>
+            <tr><td> o_cmtf </td><td> {{ sol.o_cmtf }} </td></tr>
+            <tr><td> cmtfile </td><td> {{ sol.cmtfile }} </td></tr>
+            <tr><td> th_val </td><td> {{ sol.th_val }} </td></tr>
+            <tr><td> rms_r_th </td><td> {{ sol.rms_r_th }} </td></tr>
+            <tr><td> cth_val </td><td> {{ sol.cth_val }} </td></tr>
+            <tr><td> df_val </td><td> {{ sol.df_val }} </td></tr>
+            <tr><td> ts_nit </td><td> {{ sol.ts_nit }} </td></tr>
+            <tr><td> dts_val </td><td> {{ sol.dts_val }} </td></tr>
+            <tr><td> dts_min </td><td> {{ sol.dts_min }} </td></tr>
+            <tr><td> dts_max </td><td> {{ sol.dts_max }} </td></tr>
+            <tr><td> dts_step </td><td> {{ sol.dts_step }} </td></tr>
+            <tr><td> hdsafe </td><td> {{ sol.hdsafe }} </td></tr>
+            <tr><td> xy_nit </td><td> {{ sol.xy_nit }} </td></tr>
+            <tr><td> xy_dx </td><td> {{ sol.xy_dx }} </td></tr>
+            <tr><td> xy_nx </td><td> {{ sol.xy_nx }} </td></tr>
+            <tr><td> dz </td><td> {{ sol.dz }} </td></tr>
+            <tr><td> mindep </td><td> {{ sol.mindep }} </td></tr>
+            <tr><td> xy_nopt </td><td> {{ sol.xy_nopt }} </td></tr>
+            <tr><td> ib </td><td> {{ sol.ib }} </td></tr>
+            <tr><td> priorsdrm0 </td><td> {{ sol.priorsdrm0 }} </td></tr>
+            <tr><td> azp </td><td> {{ sol.azp }} </td></tr>
+            <tr><td> med_val_flag </td><td> {{ sol.med_val_flag }} </td></tr>
+            <tr><td> op_pa_flag </td><td> {{ sol.op_pa_flag }} </td></tr>
+            <tr><td> ntr_flag </td><td> {{ sol.ntr_flag }} </td></tr>
+            <tr><td> ref_flag </td><td> {{ sol.ref_flag }} </td></tr>
+            <tr><td> ps_flag </td><td> {{ sol.ps_flag }} </td></tr>
+
+            <tr><th colspan=2 bgcolor="#87CEFA"> Centroid Moment Tensor {% if request.user.is_authenticated %}WCMT{% endif %} </th></tr>
+            <tr><td> Mrr </td><td> {{ sol.w_mrr }} </td></tr>
+            <tr><td> Mtt </td><td> {{ sol.w_mtt }} </td></tr>
+            <tr><td> Mpp </td><td> {{ sol.w_mpp }} </td></tr>
+            <tr><td> Mrt </td><td> {{ sol.w_mrt }} </td></tr>
+            <tr><td> Mrp </td><td> {{ sol.w_mrp }} </td></tr>
+            <tr><td> Mtp </td><td> {{ sol.w_mtp }} </td></tr>
+            <tr><td> Centroid time shift </td><td> {{ sol.w_time_shift }} </td></tr>
+            <tr><td> Centroid half duration </td><td> {{ sol.w_half_duration }} </td></tr>
+            <tr><td> Centroid latitude </td><td> {{ sol.w_latitude }} </td></tr>
+            <tr><td> Centroid longitude </td><td> {{ sol.w_longitude }} </td></tr>
+            <tr><td> Centroid depth </td><td> {{ sol.w_depth }} </td></tr>
+            <tr><td> M0 </td><td> {{ sol.w_m0 }} </td></tr>
+            <tr><td> Mw </td><td> {{ sol.w_mw }} </td></tr>
+            {% if request.user.is_authenticated %}
+            <tr><td> DC_FLAG </td><td> {{ sol.dc_flag }} </td></tr>
+            {% endif %} 
+
+            <tr><th colspan=2 bgcolor="#87CEFA"> Best nodal planes {% if request.user.is_authenticated %}WCMT{% endif %} </th></tr>
+            <tr><td> Fault plane 1 : strike </td><td> {{ sol.w_np1_strike }} </td></tr>
+            <tr><td> Fault plane 1 : dip </td><td> {{ sol.w_np1_dip }} </td></tr>
+            <tr><td> Fault plane 1 : rake </td><td> {{ sol.w_np1_rake }} </td></tr>
+            <tr><td> Fault plane 2 : strike </td><td> {{ sol.w_np2_strike }} </td></tr>
+            <tr><td> Fault plane 2 : dip </td><td> {{ sol.w_np2_dip }} </td></tr>
+            <tr><td> Fault plane 2 : rake </td><td> {{ sol.w_np2_rake }} </td></tr>
+
+            <tr><th colspan=2 bgcolor="#87CEFA"> Eigenvalues {% if request.user.is_authenticated %}WCMT{% endif %} </th></tr>
+            <tr><td> Eig_T </td><td> {{ sol.w_eig_t }} </td></tr>
+            <tr><td> Eig_N </td><td> {{ sol.w_eig_n }} </td></tr>
+            <tr><td> Eig_P </td><td> {{ sol.w_eig_p }} </td></tr>
+            <tr><td> Azm_T </td><td> {{ sol.w_azm_t }} </td></tr>
+            <tr><td> Azm_N </td><td> {{ sol.w_azm_n }} </td></tr>
+            <tr><td> Azm_P </td><td> {{ sol.w_azm_p }} </td></tr>
+            <tr><td> Plg_T </td><td> {{ sol.w_plg_t }} </td></tr>
+            <tr><td> Plg_N </td><td> {{ sol.w_plg_n }} </td></tr>
+            <tr><td> Plg_P </td><td> {{ sol.w_plg_p }} </td></tr>
+
+            {% if request.user.is_authenticated %}
+            <tr><th colspan=2 bgcolor="#87CEFA"> Centroid Moment Tensor RCMT </th></tr>
+            <tr><td> Mrr </td><td> {{ sol.r_mrr }} </td></tr>
+            <tr><td> Mtt </td><td> {{ sol.r_mtt }} </td></tr>
+            <tr><td> Mpp </td><td> {{ sol.r_mpp }} </td></tr>
+            <tr><td> Mrt </td><td> {{ sol.r_mrt }} </td></tr>
+            <tr><td> Mrp </td><td> {{ sol.r_mrp }} </td></tr>
+            <tr><td> Mtp </td><td> {{ sol.r_mtp }} </td></tr>
+            <tr><td> Centroid time shift </td><td> {{ sol.r_time_shift }} </td></tr>
+            <tr><td> Centroid half duration </td><td> {{ sol.r_half_duration }} </td></tr>
+            <tr><td> Centroid latitude </td><td> {{ sol.r_latitude }} </td></tr>
+            <tr><td> Centroid longitude </td><td> {{ sol.r_longitude }} </td></tr>
+            <tr><td> Centroid depth </td><td> {{ sol.r_depth }} </td></tr>
+            <tr><td> M0 </td><td> {{ sol.r_m0 }} </td></tr>
+            <tr><td> Mw </td><td> {{ sol.r_mw }} </td></tr>
+
+            <tr><th colspan=2 bgcolor="#87CEFA"> Best nodal planes RCMT </th></tr>
+            <tr><td> Fault plane 1 : strike </td><td> {{ sol.r_np1_strike }} </td></tr>
+            <tr><td> Fault plane 1 : dip </td><td> {{ sol.r_np1_dip }} </td></tr>
+            <tr><td> Fault plane 1 : rake </td><td> {{ sol.r_np1_rake }} </td></tr>
+            <tr><td> Fault plane 2 : strike </td><td> {{ sol.r_np2_strike }} </td></tr>
+            <tr><td> Fault plane 2 : dip </td><td> {{ sol.r_np2_dip }} </td></tr>
+            <tr><td> Fault plane 2 : rake </td><td> {{ sol.r_np2_rake }} </td></tr>
+
+            <tr><th colspan=2 bgcolor="#87CEFA"> Eigenvalues RCMT </th></tr>
+            <tr><td> Eig_T </td><td> {{ sol.r_eig_t }} </td></tr>
+            <tr><td> Eig_N </td><td> {{ sol.r_eig_n }} </td></tr>
+            <tr><td> Eig_P </td><td> {{ sol.r_eig_p }} </td></tr>
+            {% endif %}
+
+            <tr><th colspan=2 bgcolor="#87CEFA"> Filter parameters </th></tr>
+            <tr><td> Order </td><td> {{ sol.filt_order }} </td></tr>
+            <tr><td> Corner frequecy 1 </td><td> {{ sol.filt_cf1 }} </td></tr>
+            <tr><td> Corner frequecy 2 </td><td> {{ sol.filt_cf2 }} </td></tr>
+            <tr><td> Pass </td><td> {{ sol.filt_pass }} </td></tr>
+
+            {% if request.user.is_authenticated %}
+            <tr><th colspan=2 bgcolor="#87CEFA"> Screening parameters </th></tr>
+            <tr><td> med_val </td><td> {{ sol.med_val }} </td></tr>
+            <tr><td> p2p_med </td><td> {{ sol.p2p_med }} </td></tr>
+            <tr><td> p2p_min </td><td> {{ sol.p2p_min }} </td></tr>
+            <tr><td> p2p_max </td><td> {{ sol.p2p_max }} </td></tr>
+            <tr><td> average </td><td> {{ sol.average }} </td></tr>
+            {% endif %}
+
+            <tr><th colspan=2 bgcolor="#87CEFA"> Used data </th></tr>
+            <tr><td> Number of stations </td><td> {{ sol.nb_stations }} </td></tr>
+            <tr><td> Number of channels </td><td> {{ sol.nb_channels }} </td></tr>
+            {% if request.user.is_authenticated %}
+            <tr><td> Number of rejected channels </td><td> {{sol.nb_rejected_channels}} </td></tr>
+            {% endif %}
+            <tr><td> Stations </td><td> {{ sol.stations }} </td></tr>
+            <tr><td> WPWIN </td><td> {{ sol.wpwin }} </td></tr>
+            <tr><td> Dmin </td><td> {{ sol.dmin }} </td></tr>
+            <tr><td> Dmax </td><td> {{ sol.dmax }} </td></tr>
+            {% if request.user.is_authenticated %}
+            <tr><td> wN </td><td> {{ sol.wn }} </td></tr>
+            <tr><td> wE </td><td> {{ sol.we }} </td></tr>
+            <tr><td> wZ </td><td> {{ sol.wz }} </td></tr>
+
+            <tr><th colspan=2 bgcolor="#87CEFA"> Inversion parameters </th></tr>
+            <tr><td> command_line </td><td> {{ sol.command_line }} </td></tr>
+            <tr><td> ref_solution </td><td> {{ sol.ref_solution }} </td></tr>
+            <tr><td> cond_thre </td><td> {{ sol.cond_thre }} </td></tr>
+            <tr><td> damp_fac </td><td> {{ sol.damp_fac }} </td></tr>
+            {% endif %}
+
+            <tr><th colspan=2 bgcolor="#87CEFA"> Quality control </th></tr>
+            <tr><td> RMS </td><td> {{ sol.wrms }} </td></tr>
+            <tr><td> Normalized RMS </td><td> {{ sol.wrms_r }} </td></tr>
+            <tr><td> Gap </td><td> {{ sol.gap }} </td></tr>
+            <tr><td> Cond. number </td><td> {{ sol.cond_number }} </td></tr>
+            {% if request.user.is_authenticated %}
+            <tr><td> Reference RMS </td><td> {{ sol.rrms }} </td></tr>
+            <tr><td> Normalized reference RMS </td><td> {{ sol.rrms_r }} </td></tr>
+            {% endif %}
+            </table> 
+
+            {% elif request.session.output_format == "data" %}
+            <br><br>
+            <table border-collapse=collapse border=1px>
+            <tr><td width=25%> Number of stations </td><td> {{ sol.nb_stations }} </td></tr>
+            <tr><td> Number of channels </td><td> {{ sol.nb_channels }} </td></tr>
+            {% if request.user.is_authenticated %}
+            <tr><td> Number of rejected channels </td><td> {{ sol.nb_rejected_channels }} </td></tr>
+            {% endif %}
+            <tr><td> Stations </td><td> {{ sol.stations }} </td></tr>
+            <tr><td> WPWIN </td><td> {{ sol.wpwin }} </td></tr>
+            <tr><td> Dmin </td><td> {{ sol.dmin }} </td></tr>
+            <tr><td> Dmax </td><td> {{ sol.dmax }} </td></tr>
+            {% if request.user.is_authenticated %}
+            <tr><td> wN </td><td> {{ sol.wn }} </td></tr>
+            <tr><td> wE </td><td> {{ sol.we }} </td></tr>
+            <tr><td> wZ </td><td> {{ sol.wz }} </td></tr>
+            {% endif %}
+            </table>
+            {% elif request.session.output_format == "std" %}
+                <pre>
+<img align=right width=75 height=75  src="/media/{{ sol.event_id }}_{{ sol.status }}.png">
+Date: {{sol.event.date|date:"Y/m/d" }}     Origin time:  {{sol.event.date|date:"H:i:s" }}    Mw = {{ sol.w_mw }}
+Lat= {{ sol.w_latitude|center:"8" }}        Lon= {{ sol.w_longitude|center:"8" }}    Depth= {{ sol.w_depth|center:"8" }}
+Time delay=  {{ sol.w_time_shift }}   Half duration= {{ sol.w_half_duration|center:"8" }}
+
+Moment Tensor: 
+    Scalar Moment = {{ sol.w_m0 }}
+    rr = {{ sol.w_mrr|center:"14" }}    tt = {{ sol.w_mtt|center:"14" }}    pp = {{ sol.w_mpp|center:"14" }}   
+    rt = {{ sol.w_mrt|center:"14" }}    rp = {{ sol.w_mrp|center:"14" }}    tp = {{ sol.w_mtp|center:"14" }} 
+
+Fault planes:  
+    1. strike = {{ sol.w_np1_strike|center:"6" }}   dip = {{ sol.w_np1_dip|center:"6" }}   rake = {{ sol.w_np1_rake|center:"6" }} 
+    2. strike = {{ sol.w_np2_strike|center:"6" }}   dip = {{ sol.w_np2_dip|center:"6" }}   rake = {{ sol.w_np2_rake|center:"6" }} 
+
+Principal axes:
+    1.(T) Val = {{ sol.w_eig_t|center:"14" }} ; Plg = {{ sol.w_plg_t|center:"10" }} ; Azm = {{ sol.w_azm_t|center:"10" }}
+    2.(N)       {{ sol.w_eig_n|center:"14" }} ;       {{ sol.w_plg_n|center:"10" }} ;       {{ sol.w_azm_n|center:"10" }}
+    3.(P)       {{ sol.w_eig_p|center:"14" }} ;       {{ sol.w_plg_p|center:"10" }} ;       {{ sol.w_azm_p|center:"10" }}
+                </pre>
+            {% endif %}
+        {% endif %}
+        {% endfor %}
+    {% endfor %}
+</div>
+<div class="pagination">
+<span class="step-links">
+    {% if s_results.number != 1 %}
+    <a href="?page=1">first</a>
+    {% endif %}
+    {% if s_results.has_previous %}
+        <a href="?page={{ s_results.previous_page_number }}">previous</a>
+    {% endif %}
+    <span class="current">
+        Page {{ s_results.number }} of {{ s_results.paginator.num_pages }}.
+    </span>
+    {% if s_results.has_next %}
+        <a href="?page={{ s_results.next_page_number }}">next</a>
+    {% endif %}
+    {% if s_results.number != s_results.paginator.num_pages %}
+    <a href="?page={{ s_results.paginator.num_pages }}">last</a>
+    {% endif %}
+</span>
+</div>
+
+{% else %}
+<p> Nothing corresponds to your research.</p>
+{% endif %}
+
+<p><a href="{% url 'wphase:search_form' %}"> Make a new research </a></p>
+<h3><a href="{% url 'wphase:index' %}"> Back to index </a></h3>

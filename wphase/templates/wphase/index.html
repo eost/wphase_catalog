@@ -1,0 +1,19 @@
+<h1 align=center> WPHASE catalog - Welcome !</h1>
+<div>
+    {% if user.is_anonymous %}
+    <a href="{% url 'django.contrib.auth.views.login' %}">Log in</a>
+    {% else %}
+    <a href="{% url 'wphase:my_logout' %}">Log out</a>
+    {% endif %}
+</div>
+{% if latest_event_list %}
+    <h3> Last occured events </h3>
+    <ul>
+    {% for event in latest_event_list %}
+        <li><a href="{% url 'wphase:event' event.eventid %}">{{ event }}</a></li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No events are available.</p>
+{% endif %}
+<h3><a href="{% url 'wphase:search_form' %}"> Look for events </a></h3>

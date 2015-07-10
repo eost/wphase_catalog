@@ -1,0 +1,161 @@
+<div>
+    {% if user.is_anonymous %}
+    <a href="{% url 'django.contrib.auth.views.login' %}">Log in</a>
+    {% else %}
+    <a href="{% url 'wphase:my_logout' %}">Log out</a>
+    {% endif %}
+</div>
+<a href="{% url 'wphase:index' %}"> Back to index </a>
+<h1 align=center>{{ solution }}</h1>
+
+{% if error_message %}<p><strong>{{ error_message }}</strong>{% endif %}
+
+<a href="{% url 'wphase:event' solution.event.eventid %}">Related event</a>
+<br><br>
+
+<fieldset>
+<legend> General information </legend>
+<pre>
+status       : {{ solution.status }}
+code_version : {{ solution.code_version }}
+{% if request.user.is_authenticated %}GF_PATH      : {{ solution.gf_path }}{% endif %}
+</pre>
+</fieldset>
+
+<fieldset>
+<legend> Centroid moment tensor {% if request.user.is_authenticated %}WCMT{% endif %} </legend>
+<pre>
+rr = {{ solution.w_mrr|center:"14" }}    tt = {{ solution.w_mtt|center:"14" }}    pp = {{ solution.w_mpp|center:"14" }}   
+rt = {{ solution.w_mrt|center:"14" }}    rp = {{ solution.w_mrp|center:"14" }}    tp = {{ solution.w_mtp|center:"14" }} 
+Centroid time delay    : {{ solution.w_time_shift }} 
+Centroid half duration : {{ solution.w_half_duration }} 
+Centroid latitude      : {{ solution.w_latitude }} 
+Centroid longitude     : {{ solution.w_longitude }} 
+Centroid depth         : {{ solution.w_depth }} 
+Scalar Moment          : {{ solution.w_m0 }} 
+Magnitude              : {{ solution.w_mw }}
+{% if request.user.is_authenticated %}DC_FLAG                : {{ solution.dc_flag }}{% endif %}
+</pre>
+</fieldset>
+
+<fieldset>
+<legend> Best nodal planes {% if request.user.is_authenticated %}WCMT{% endif %} </legend>
+<pre>
+Nodal plane 1 strike : {{ solution.w_np1_strike }} 
+              dip    : {{ solution.w_np1_dip }} 
+              rake   : {{ solution.w_np1_rake }} 
+Nodal plane 2 strike : {{ solution.w_np2_strike }} 
+              dip    : {{ solution.w_np2_dip }} 
+              rake   : {{ solution.w_np2_rake }} 
+</pre>
+</fieldset>
+
+<fieldset>
+<legend> Eigenvalues {% if request.user.is_authenticated %}WCMT{% endif %} </legend>
+<pre>
+1.(T) Val={{ solution.w_eig_t|center:"14" }} ; Plg={{ solution.w_plg_t|center:"14" }} ; Azm={{ solution.w_azm_t|center:"14" }}
+2.(N)     {{ solution.w_eig_n|center:"14" }} ;     {{ solution.w_plg_n|center:"14" }} ;     {{ solution.w_azm_n|center:"14" }}
+3.(P)     {{ solution.w_eig_p|center:"14" }} ;     {{ solution.w_plg_p|center:"14" }} ;     {{ solution.w_azm_p|center:"14" }}
+</pre>
+</fieldset>
+
+{% if request.user.is_authenticated %}
+<fieldset>
+<legend> Centroid moment tensor RCMT </legend>
+<pre>
+rr = {{ solution.r_mrr|center:"14" }}    tt = {{ solution.r_mtt|center:"14" }}    pp = {{ solution.r_mpp|center:"14" }}   
+rt = {{ solution.r_mrt|center:"14" }}    rp = {{ solution.r_mrp|center:"14" }}    tp = {{ solution.r_mtp|center:"14" }} 
+Time delay    : {{ solution.r_time_shift }} 
+Half duration : {{ solution.r_half_duration }} 
+Latitude      : {{ solution.r_latitude }} 
+Longitude     : {{ solution.r_longitude }} 
+Depth         : {{ solution.r_depth }} 
+M0            : {{ solution.r_m0 }} 
+Mw            : {{ solution.r_mw }} 
+</pre>
+</fieldset>
+
+<fieldset>
+<legend> Best nodal planes RCMT </legend>
+<pre>
+Nodal plane 1 strike : {{ solution.r_np1_strike }} 
+              dip    : {{ solution.r_np1_dip }} 
+              rake   : {{ solution.r_np1_rake }} 
+Nodal plane 2 strike : {{ solution.r_np2_strike }} 
+              dip    : {{ solution.r_np2_dip }} 
+              rake   : {{ solution.r_np2_rake }} 
+</pre>
+</fieldset>
+
+<fieldset>
+<legend> Eigenvalues RCMT </legend>
+<pre>
+1.(T) Val={{ solution.r_eig_t|center:"14" }}
+2.(N)     {{ solution.r_eig_n|center:"14" }}
+3.(P)     {{ solution.r_eig_p|center:"14" }}
+</pre>
+</fieldset>
+{% endif %}
+
+<fieldset>
+<legend> Filter parameters </legend>
+<pre>
+Order              : {{ solution.filt_order }} 
+Corner frequency 1 : {{ solution.filt_cf1 }} 
+Corner frequency 2 : {{ solution.filt_cf2 }} 
+Pass               : {{ solution.filt_pass }} 
+</pre>
+</fieldset>
+
+{% if request.user.is_authenticated %}
+<fieldset>
+<legend> Screening parameters </legend>
+<pre>
+med_val : {{ solution.med_val }} 
+p2p_med : {{ solution.p2p_med }} 
+p2p_min : {{ solution.p2p_min }} 
+p2p_max : {{ solution.p2p_max }} 
+average : {{ solution.average }} 
+</pre>
+</fieldset>
+{% endif %}
+
+<fieldset>
+<legend> Used data </legend>
+<pre>
+Number of stations          : {{ solution.nb_stations }} 
+Number of channels          : {{ solution.nb_channels }} 
+{% if request.user.is_authenticated %}Number of rejected channels : {{ solution.nb_rejected_channels }}{% endif %} 
+Stations             : {{ solution.stations }} 
+WPWIN                : {{ solution.wpwin }} 
+Dmin                 : {{ solution.dmin }} 
+Dmax                 : {{ solution.dmax }} 
+{% if request.user.is_authenticated %}wN                   : {{ solution.wn }} 
+wE                   : {{ solution.we }} 
+wZ                   : {{ solution.wz }} 
+</pre>
+</fieldset>
+
+<fieldset>
+<legend> Inversion parameters </legend>
+<pre>
+command_line : {{ solution.command_line }} 
+ref_solution : {{ solution.ref_solution }} 
+cond_thre    : {{ solution.cond_thre }} 
+damp_fac     : {{ solution.damp_fac }} 
+</pre>
+</fieldset>
+{% endif %}
+
+<fieldset>
+<legend> Quality control </legend>
+<pre>
+RMS                      : {{ solution.wrms }} 
+Normalized RMS           : {{ solution.wrms_r }} 
+Gap                      : {{ solution.gap }} 
+Cond. number             : {{ solution.cond_number }} 
+{% if request.user.is_authenticated %}Reference RMS            : {{ solution.rrms }} 
+Normalized reference RMS : {{ solution.rrms_r }} 
+{% endif %}
+</pre>
+</fieldset>

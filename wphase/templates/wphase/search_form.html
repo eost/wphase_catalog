@@ -1,0 +1,67 @@
+<h1 align=center>WPHASE Catalog Search</h1>
+<div>
+    {% if user.is_anonymous %}
+    <a href="{% url 'django.contrib.auth.views.login' %}">Log in</a>
+    {% else %}
+    <a href="{% url 'wphase:my_logout' %}">Log out</a>
+    {% endif %}
+</div>
+<br>
+{% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+<div>
+<form action="{% url 'wphase:search' %}" method="post">
+{% csrf_token %}
+    <fieldset>
+    <legend> Event Location </legend> 
+        <p> Latitude (degrees) : from {{ form.latitude_min }} to {{ form.latitude_max }} </p>
+        <p> Longitude (degrees) : from {{ form.longitude_min }} to {{ form.longitude_max }} </p>
+        <p> Depth (kilometers) : from {{ form.depth_min }} to {{ form.depth_max }} </p>
+    </fieldset>
+    <fieldset>
+    <legend> Origin Time </legend> 
+        <p> From (year) {{ form.year_min }} (month) {{ form.month_min }} (day) {{ form.day_min }} </p>
+        <p> to (year) {{ form.year_max }} (month) {{ form.month_max }} (day) {{ form.day_max }} </p>
+    </fieldset>
+    <fieldset>
+    <legend> Magnitude </legend> 
+        <p> {{ form.mw_min }} <= Mw <= {{ form.mw_max }} </p>
+    </fieldset>
+    <fieldset>
+    <legend> Nodal plane </legend> 
+        <p> NP strike : from {{ form.NPS_min }} to {{ form.NPS_max }} </p>
+        <p> NP dip    : from {{ form.NPD_min }} to {{ form.NPD_max }} </p>
+        <p> NP rake   : from {{ form.NPR_min }} to {{ form.NPR_max }} </p>
+    </fieldset>
+    <fieldset>
+    <legend> Used data </legend>
+        <p> Stations <small>(Ctrl to select more than one)</small> :</p>
+        <p> {{ form.stations }} </p>
+    </fieldset>
+    <fieldset>
+    <legend> Quality control </legend>
+        <p> Azimuthal Gap (degrees ): from {{ form.gap_min }} to {{ form.gap_max }} </p>
+    </fieldset>
+    {% if request.user.is_authenticated %}
+    <fieldset>
+    <legend> Display options </legend>
+        <p> Which types of solution do you want to be displayed ? <small>(Ctrl to select more than one)</small></p>
+        <p> {{ form.types_solution }} </p>
+        <p> How do you want the solutions to be sorted ? </p>
+        <p> {{ form.order_solution }} </p>
+        <h6> OUTPUT FORMAT </h6>
+        <p> {{ form.output_format }} </p>
+    </fieldset>
+    {% else %}
+    <fieldset>
+    <legend> Output Format </legend>
+        <p> Choose one of the following formats. </p>
+        <p> {{ form.output_format }} </p>
+        <p> Choose one of the following orders. </p>
+        <p> {{ form.order_solution }} </p>
+    </fieldset>
+    {% endif %}
+</br>
+<input type="submit" value="Search" />
+</form>
+</div>
+<h3><a href="{% url 'wphase:index' %}"> Back to index </a></h3>

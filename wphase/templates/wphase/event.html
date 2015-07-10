@@ -1,0 +1,37 @@
+<div>
+    {% if user.is_anonymous %}
+    <a href="{% url 'django.contrib.auth.views.login' %}">Log in</a>
+    {% else %}
+    <a href="{% url 'wphase:my_logout' %}">Log out</a>
+    {% endif %}
+</div>
+<h1 align=center>Event name : {{ event.eventid }}</h1>
+
+{% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+
+<pre>
+Origin Time   : {{ event.epi_year }}/{{ event.epi_month }}/{{ event.epi_day }} {{ event.epi_hour }}:{{ event.epi_minute }}:{{ event.epi_second }}
+{% if request.user.is_authenticated %}
+Hypocenter agency    : {{ event.epi_agency }}
+Hypocenter latitude  : {{ event.epi_latitude }}
+Hypocenter longitude : {{ event.epi_longitude }}
+Hypocenter depth     : {{ event.epi_depth }}
+Hypocenter m1        : {{ event.epi_m1 }}
+Hypocenter m2        : {{ event.epi_m2 }}
+Hypocenter region    : {{ event.epi_region }}
+{% else %}
+Hypocenter latitude  : {{ event.epi_latitude }}
+Hypocenter longitude : {{ event.epi_longitude }}
+Hypocenter depth     : {{ event.epi_depth }}
+Hypocenter region    : {{ event.epi_region }}
+{% endif %}
+</pre>
+
+<p> Associated solutions : </p>
+<ul>
+{% for solution in solutions %}
+    <li><a href="{% url 'wphase:solution' solution.id %}">{{ solution }}</a></li>
+{% endfor %}
+</ul>
+
+<h3><a href="{% url 'wphase:index' %}"> Back to index </a></h3>
