@@ -11,20 +11,25 @@
 <div>
 {% if s_results %}
     {% if request.session.output_format == "cmtsolution" %}
-    <h2> CMTSOLUTION FORMAT</h2>
+    <h2> CMTSOLUTION FORMAT </h2>
     {% elif request.session.output_format == "full" %}
     <h2> FULL FORMAT </h2>
     {% elif request.session.output_format == "data" %}
-    <h2>USED DATA </h2>
+    <h2> USED DATA </h2>
     {% elif request.session.output_format == "std" %}
-    <h2>STANDARD FORMAT </h2>
+    <h2> STANDARD FORMAT </h2>
     {% endif %}
+
     <a href="{% url 'wphase:generate_txt' request.session.sol_ids %}"> Save as .txt (CMTSOLUTIONS)</a>
     {% for sol in s_results %}
         {% for type in request.session.types_solution %}
         {% if type in sol.status or type == "all" or type == "preferred" %}
             <br><br>
+            {% if request.user.is_authenticated %}
+            <b> {{ sol }} </b>
+            {% else %}
             <b> {{ sol.event.eventid }} {{ sol.event.epi_region }} </b>
+            {% endif %}
             {% if request.session.output_format == "cmtsolution" %}
                 <pre>
 {{ sol.event.capsule }}

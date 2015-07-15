@@ -45,4 +45,4 @@ class SearchForm(forms.Form):
 
     output_format  = forms.ChoiceField(choices=(('std','Standard'),('cmtsolution','CMTSOLUTION'),('full','Full format'),('data','Used data')), initial=('std', 'Standard'))
 
-    order_solution = forms.ChoiceField(choices=(('time', 'Chronological order'), ('rev_time', 'Reversed chronological order'), ('mag', 'Magnitude'), ('rev_mag', 'Reversed magnitude')), initial=('time', 'Chronological order'))
+    order_solution = forms.ChoiceField(choices=(('time', 'Chronological order'), ('rev_time', 'Reverse chronological order'), ('mag', 'Magnitude order'), ('rev_mag', 'Reverse magnitude order')), initial=('time', 'Chronological order'))

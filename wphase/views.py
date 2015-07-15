@@ -184,7 +184,6 @@ def search(request):
                 # If page is out of range (e.g. 9999), deliver last page of results.
                 res = paginator.page(paginator.num_pages)
 
-            print (Event._meta.get_field('epi_region').max_length)
             return render(request, 'wphase/results.html/', {'s_results':res})
 
 
