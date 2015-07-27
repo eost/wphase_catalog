@@ -32,31 +32,31 @@ class Event(models.Model):
         return datetime(self.epi_year, self.epi_month, self.epi_day, self.epi_hour, self.epi_minute, self.epi_second)
 
     def capsule(self):
-        res        = [" "] * 94
+        res        = [" "] * 85
         res[1:4]   = self.epi_agency
-        res[5:9]   = str(self.epi_year)
-        res[10]    = " "
-        res[11:12] = str(self.epi_month)
-        res[13]    = " "
-        res[14:15] = str(self.epi_day)
-        res[16]    = " "
-        res[17:18] = str(self.epi_hour)
-        res[19]    = " "
-        res[20:21] = str(self.epi_minute)
-        res[22]    = " "
-        res[23:27] = str(self.epi_second)
-        res[28]    = " "
-        res[29:36] = str(self.epi_latitude)
-        res[37]    = " "
-        res[38:46] = str(self.epi_longitude)
-        res[47]    = " "
-        res[48:52] = str(self.epi_depth)
-        res[53]    = " "
-        res[54:56] = str(self.epi_m1)
-        res[57]    = " "
-        res[58:60] = str(self.epi_m2)
-        res[61]    = " "
-        res[62:]   = self.epi_region
+        res[5:8]   = str(self.epi_year)
+        res[9]    = " "
+        res[10:11] = str(self.epi_month)
+        res[12]    = " "
+        res[13:14] = str(self.epi_day)
+        res[15]    = " "
+        res[16:17] = str(self.epi_hour)
+        res[18]    = " "
+        res[19:20] = str(self.epi_minute)
+        res[21]    = " "
+        res[22:26] = str(self.epi_second)
+        res[27]    = " "
+        res[28:35] = str(self.epi_latitude)
+        res[36]    = " "
+        res[37:45] = str(self.epi_longitude)
+        res[46]    = " "
+        res[47:51] = str(self.epi_depth)
+        res[52]    = " "
+        res[53:55] = str(self.epi_m1)
+        res[56]    = " "
+        res[57:59] = str(self.epi_m2)
+        res[60]    = " "
+        res[61:]   = self.epi_region
         return ''.join(res)
 
 class Solution(models.Model):
