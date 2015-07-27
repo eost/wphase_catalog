@@ -2,13 +2,47 @@
 *This document's purpose is to describe the wphase catalog's structure and help developers who want to improve it getting familiar with its architecture.*
 
 ## Information
-This project is written using Django 1.8 and Python 3.2. It currently uses the following libraries :
-* numpy
-* matplotlib
-* psycopg2-2.6
+This project is written using [Django 1.8](https://www.djangoproject.com/download/), [Python 3.2](https://www.python.org/downloads/) and [PostgreSQL 9.4](http://www.postgresql.org/). It currently uses the following libraries :
+* [numpy](http://www.numpy.org/)
+* [matplotlib-1.4.3](http://matplotlib.org/)
+* [psycopg2-2.6](https://pypi.python.org/pypi/psycopg2)
 
 Please report bugs to <zacharie.duputel@unistra.fr>.
-    
+
+
+## Installation / Use
+In order for the app to work efficiently, the librairies mentionned above shall be installed ; please follow the links for more information about downloading these librairies.
+
+### Run the server
+To consult the app's interface and manage the administration site, it is necessary to run the application server. Open a terminal, get in the wphase_catalog/wphase directory, and enter the following command :
+
+```
+python3 manage.py runserver
+```
+The following instructions will take place in the same directory, or be indicated otherwise.  
+To execute the other operations, you may quit the server and run it again later or open a new terminal. In the later case, you may have to restart the server so the changes are taken in account.  
+By default, the runserver command starts the development server on the internal IP at port 8000. If you want to change the server’s port, pass it as a command-line argument.
+
+### Make changes in models
+Every time a change is made in the models.py file, you have to apply these modifications to the database. First execute the following command :
+
+```
+python3 manage.py makemigrations
+``` 
+The modifications are now registered in the wphase_catalog/wphase/migrations directory. You can consult them anytime, as they are written so they can be read by a human.  
+Now to apply these changes, enter :
+
+```
+python3 manage.py migrate
+```
+It allows you to change your models without having to delete all your database. However, if you add a new field to a model, make sure to add this to its options :
+
+```
+null = True
+```
+Otherwise the migration will raise an error.  
+You do not need to make a migration when you modify a model's method.
+
 
 ## Global structure
 The app inserts itself in a Django project, therefore has the structure of the following tree :
