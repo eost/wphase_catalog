@@ -20,7 +20,10 @@
     <h2> STANDARD FORMAT </h2>
     {% endif %}
 
-    <a href="{% url 'wphase:generate_txt' request.session.sol_ids %}"> Save as .txt (CMTSOLUTIONS)</a>
+    <a href="{% url 'wphase:generate_txt' request.session.sol_ids %}"> Save CMTSOLUTIONS (txt)</a> <br>
+    {% if request.user.is_authenticated %}
+    <a href="{% url 'wphase:generate_targz' request.session.sol_ids %}"> Save RUN directories (.tar.gz)</a>
+    {% endif %}
     {% for sol in s_results %}
         {% for type in request.session.types_solution %}
         {% if type in sol.status or type == "all" or type == "preferred" %}

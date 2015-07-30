@@ -1,4 +1,4 @@
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, FileResponse
 from django.shortcuts import render, get_object_or_404
 from django.views import generic
 from django.db.models import Q
@@ -11,7 +11,7 @@ from django.contrib.auth import logout
 from .models import Event, Solution
 from .forms import SearchForm
 from datetime import datetime
-import sys, os
+import sys, os, tarfile
 
 class IndexView(generic.ListView):
     template_name = 'wphase/index.html'
@@ -151,10 +151,10 @@ def search(request):
                     if output_format == "std":
                         name_file = sol.event_id + "_" + sol.status + ".png"
                         path = "media/"+name_file
-                        if os.path.isfile(path):
-                            print ("Picture already exists")
-                        else:
+                        if not os.path.isfile(path):
                             sol.plot(name_file)
+                            print ("Picture was created")
+                            
 
             # Sorting results
             if (order_solution == 'time'):
@@ -216,6 +216,7 @@ def generate_txt(request, results):
     # Create the HttpResponse object with the appropriate header.
     response = HttpResponse(content_type='text/plain')
     response['Content-Disposition'] = 'attachment; filename="results.txt"'
+
     for r in results.split('_'):
         sol  = Solution.objects.get(pk=r)
         txt  = sol.event.capsule() + "\n"
@@ -232,7 +233,53 @@ def generate_txt(request, results):
         txt += "Mrp           : " + str(sol.w_mrp)           + "\n"
         txt += "Mtp           : " + str(sol.w_mtp)           + "\n\n"
         response.write(txt)
+
     return response
+
+def generate_targz(request, results):
+    # Create and fill tar.gz file
+    runs_results = tarfile.open("runs_results.tar.gz", "w:gz")
+    runs_path = "/home/lucile/WPHASE/runs"
+    if os.path.isdir(runs_path):
+        for run in os.listdir(runs_path):
+            run_path = os.path.join(runs_path, run)
+            if os.path.isdir(run_path):
+                cmt_path = os.path.join(run_path, "CMTSOLUTION")
+                if os.path.isfile(cmt_path):
+                    for r in results.split('_'):
+                        sol = Solution.objects.get(pk=r)
+                        with open(cmt_path) as cmt :
+                            if (sol.event.eventid in cmt.readlines()[1].strip()):
+                                if run not in runs_results :
+                                    #runs_results.add(os.path.join(runs_path, run), arcname=run)
+                                    runs_results.add(os.path.join(run_path, "i_master"), arcname=run+"/i_master")
+                                    runs_results.add(os.path.join(run_path, "CMTSOLUTION"), arcname=run+"/CMTSOLUTION")
+                                    if os.path.isfile(os.path.join(run_path, "wpinversion.ini")):
+                                        runs_results.add(os.path.join(run_path, "wpinversion.ini"), arcname=run+"/wpinversion.ini")
+                                    if os.path.isfile(os.path.join(run_path, "wpinversion_gs.ini")):
+                                        runs_results.add(os.path.join(run_path, "wpinversion_gs.ini"), arcname=run+"/wpinversion_gs.ini")
+                                    if os.path.isfile(os.path.join(run_path, "WCMTSOLUTION")):
+                                        runs_results.add(os.path.join(run_path, "WCMTSOLUTION"), arcname=run+"/WCMTSOLUTION")
+                                    if os.path.isfile(os.path.join(run_path, "ts_WCMTSOLUTION")):
+                                        runs_results.add(os.path.join(run_path, "ts_WCMTSOLUTION"), arcname=run+"/ts_WCMTSOLUTION")
+                                    if os.path.isfile(os.path.join(run_path, "xy_WCMTSOLUTION")):
+                                        runs_results.add(os.path.join(run_path, "xy_WCMTSOLUTION"), arcname=run+"/xy_WCMTSOLUTION")
+                                    if os.path.isfile(os.path.join(run_path, "p_wpinversion.ps")):
+                                        runs_results.add(os.path.join(run_path, "p_wpinversion.ps"), arcname=run+"/p_wpinversion.ps")
+                                    if os.path.isfile(os.path.join(run_path, "ts_p_wpinversion.ps")):
+                                        runs_results.add(os.path.join(run_path, "ts_p_wpinversion.ps"), arcname=run+"/ts_p_wpinversion.ps")
+                                    if os.path.isfile(os.path.join(run_path, "xy_p_wpinversion.ps")):
+                                        runs_results.add(os.path.join(run_path, "xy_p_wpinversion.ps"), arcname=run+"/xy_p_wpinversion.ps")
+                                    if os.path.isfile(os.path.join(run_path, "o_wpinversion.ps")):
+                                        runs_results.add(os.path.join(run_path, "o_wpinversion"), arcname=run+"/o_wpinversion")
+
+    runs_results.close()
+
+    # Create response
+    response = FileResponse(open('runs_results.tar.gz', 'rb'), content_type="application/x-gzip")
+    response['Content-Disposition'] = 'attachment; filename="runs_results.tar.gz"'
+
+    return response;
 
 def my_logout(request):
     logout(request)
