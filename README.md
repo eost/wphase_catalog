@@ -58,12 +58,17 @@ null = True
 Otherwise the migration will raise an error.  
 You do not need to make a migration when you modify the method of a model.
 
-### Handle the database
+### Setting up the database
 
 To manage your database, you can connect to the PostgreSQL interface by executing from a new terminal :
 
 ```
-sudo -u postgres psql postgres
+sudo -u postgres_user psql postgres_db
+```
+We assume here that "postgres_user" and "postgres_db" are respectively the superuser and the name of a database created by default by PostgreSQL (usually both are simply "postgres"). The superuser name must be specified in the environment variable
+
+```
+$POSTGRES_DB_USER
 ```
 
 After your first connection, don't forget to set a password for the "postgres" database role using the command :
@@ -71,7 +76,8 @@ After your first connection, don't forget to set a password for the "postgres" d
 ```
 \password postgres
 ```
-and give the password you want when prompted. "postgres" is a superuser created by PostgreSQL, and the name of a database created by default.  
+and give the password you want when prompted. 
+
 Register the value you chose as a password for postgres in the environment variable :
 
 ```
@@ -85,14 +91,20 @@ When you connect with the command given above, you will be connected to the post
 ```
 db_name being the database you want to connect to.  
 
-**We assume from this point that you are connected on the PostgreSQL interface as 'postgres'.**  
+You can also list the existing roles using 
+
+```
+\du
+```
+
+**We assume from this point that you are connected on the PostgreSQL interface as a superuser.**  
 
 To create your database, execute the following command :
 
 ```
 CREATE DATABASE db_wphase ;
 CREATE USER django_user WITH PASSWORD 'django_password' ;
-GRANT ALL PRIVILEGES ON db_wphase TO django_user ;
+GRANT ALL PRIVILEGES ON DATABASE db_wphase TO django_user ;
 ```
 
 Replace django_user and django_password respectively by the values you chose for $WPHASE_DB_USER and $WPHASE_DB_PASSWORD.  
@@ -118,7 +130,7 @@ Do *NOT* make any changes in the structure of your database via the PostgreSQL i
 
 ### Runnning the Python scripts
 
-Both scripts take a .INI file as argument. To run them simply, execute the following commands :
+oth scripts take a .INI file as argument. To run them simply, execute the following commands :
 
 ```
 chmod +rwx wphase_ini_to_[db/run]
