@@ -168,6 +168,7 @@ def search(request):
 
             request.session["types_solution"] = types_solution
             request.session["output_format"]  = output_format
+            request.session["order_solution"] = order_solution
 
             # For txt saved file
             request.session["sol_ids"]        = '_'.join(map(str,s_ids))
@@ -191,13 +192,24 @@ def search(request):
         else:
             return render(request, 'wphase/search_form.html',{'error_message': "Sorry, but the form is not valid.", 'form':SearchForm()})
 
-    # if GET : create a blank form
+    # if GET 
     else:
         sol_ids = request.session["sol_ids"].split('_')
         sol_ids = map(int, sol_ids)
         s_results = []
         for i in sol_ids:
             s_results.append(Solution.objects.get(pk=i))
+
+        # Sorting results
+        if (request.session["order_solution"] == 'time'):
+            s_results = sorted(s_results, key=lambda a: a.event.date())
+        elif (request.session["order_solution"] == 'rev_time'):
+            s_results = sorted(s_results, key=lambda a: a.event.date(), reverse=True)
+        elif (request.session["order_solution"] == 'mag'):
+            s_results = sorted(s_results, key=lambda a: a.w_mw)
+        else: # if order_solution == 'rev_mag'
+            s_results = sorted(s_results, key=lambda a: a.w_mw, reverse=True)
+
         paginator = Paginator(s_results, 10) # Show 10 results per page
         page = request.GET.get('page')
         try:
