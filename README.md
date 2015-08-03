@@ -13,6 +13,21 @@ Please report bugs to <zacharie.duputel@unistra.fr>.
 ## Installation / Use
 In order for the app to work efficiently, the librairies mentionned above shall be installed ; please follow the links for more information about downloading these librairies.
 
+Please change line 254 from wphase_catalog/wphase/views.py. Replace it with :
+
+```
+runs_path = "/path/to/WPHASE/runs"
+```
+
+Create the two following environment variables with values to your convenience :
+
+```
+$WPHASE_DB_USER
+$WPHASE_DB_PASSWORD
+```
+
+They will be Django's login and password to connect to the database.
+
 ### Run the server
 To consult the app's interface and manage the administration site, it is necessary to run the application server. Open a terminal, get in the wphase_catalog/wphase directory, and enter the following command :
 
@@ -41,7 +56,95 @@ It allows you to change your models without having to delete all your database. 
 null = True
 ```
 Otherwise the migration will raise an error.  
-You do not need to make a migration when you modify a model's method.
+You do not need to make a migration when you modify the method of a model.
+
+### Handle the database
+
+To manage your database, you can connect to the PostgreSQL interface by executing from a new terminal :
+
+```
+sudo -u postgres psql postgres
+```
+
+After your first connection, don't forget to set a password for the "postgres" database role using the command :
+
+```
+\password postgres
+```
+and give the password you want when prompted. "postgres" is a superuser created by PostgreSQL, and the name of a database created by default.  
+Register the value you chose as a password for postgres in the environment variable :
+
+```
+$POSTGRES_DB_PASSWORD
+```
+
+When you connect with the command given above, you will be connected to the postgres database. To change to another database, enter the following command when you are already on the interface :
+
+```
+\c db_name
+```
+db_name being the database you want to connect to.  
+
+**We assume from this point that you are connected on the PostgreSQL interface as 'postgres'.**  
+
+To create your database, execute the following command :
+
+```
+CREATE DATABASE db_wphase ;
+CREATE USER django_user WITH PASSWORD 'django_password' ;
+GRANT ALL PRIVILEGES ON db_wphase TO django_user ;
+```
+
+Replace django_user and django_password respectively by the values you chose for $WPHASE_DB_USER and $WPHASE_DB_PASSWORD.  
+
+For the database to be usable by Django, you have to run its server using the following command :
+
+```
+pg_ctl start
+```
+
+At this point, run in your Django terminal (at wphase_catalog/wphase) the following command :
+
+```
+python manage.py migrate
+```
+
+It makes Django create the structure of the database. 
+
+*A very useful guide of commands for PostgreSQL interface can be consulted [here](http://www.opengurukul.com/vlc/mod/page/view.php?id=3093).*  
+
+**CAUTION**  
+Do *NOT* make any changes in the structure of your database via the PostgreSQL interface. Django manages the needed changes using the migration system, and it would be dangerous to alter the structure yourself.
+
+### Runnning the Python scripts
+
+Both scripts take a .INI file as argument. To run them simply, execute the following commands :
+
+```
+chmod +rwx wphase_ini_to_[db/run]
+./wphase_ini_to_[db/run].py wpinversion[_gs].ini
+```
+The first line only needs to be executed once : it allows you to run the program.  
+
+#### wphase_ini_to_db.py
+
+First you will have to change an absolute path that is written at line 238 of the code. Please replace it with :
+
+```
+file_path = '/path/to/wphase_catalog/media/' +eventid+ '_' +status+ '.png'
+```
+This script reads a .INI file and enters the data written there in the database. It creates one Solution object for each section of the .INI file ; a Solution being defined by its **status** (med, th*x.x*, ts, xy, z) and its **related event**, the script will replace the values for a previous existing Solution. Replacing former data also deletes the associated beachball in */media* folder.  
+It has to be run successively with both wpinversion.ini and wpinversion_gs.ini for complete information.
+
+#### wphase_ini_to_run.py
+
+This script is meant to take place in the WPHASE directory, i.e. in the same folder as */runs* and */wphase*. Please either move the script or make adequate changes in the code (line 35) :
+
+```
+folder = "/path/to/runs/" + cfg.get(s, 'eventid')
+```
+
+The script reads a .INI file and creates a run directory containing the CMTSOLUTION and i_master files that gave the results written there. To make sure the i_master contains all the changed options, it is better to pass **wpinversion_gs.ini** as an argument rather than wpinversion.ini.
 
 
 ## Global structure

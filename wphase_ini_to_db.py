@@ -28,7 +28,8 @@ def main(argv):
     cfg.read(ini)
 
     # Connecting to the database
-    conn = psycopg2.connect("dbname='db_wphase' user='postgres' password='madmax' host='localhost'")
+    pwd  = os.environ['POSTGRES_DB_PASSWORD']
+    conn = psycopg2.connect(database='db_wphase', user='postgres', password=pwd, host='localhost')
 
     # Creating a psycopg cursor
     cur = conn.cursor()
