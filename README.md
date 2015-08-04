@@ -26,7 +26,15 @@ $WPHASE_DB_USER
 $WPHASE_DB_PASSWORD
 ```
 
-They will be Django's login and password to connect to the database.
+They will be Django's login and password to connect to the database.  
+
+Get in the wphase_catalog/wphase directory and create a user as following :
+
+```
+python3 manage.py createsuperuser
+```
+
+You will be asked a username, a password and an email adress ; choose the first two wisely as they will be your login and password to connect to the website as an administrator.
 
 ### Run the server
 To consult the app's interface and manage the administration site, it is necessary to run the application server. Open a terminal, get in the wphase_catalog/wphase directory, and enter the following command :
@@ -63,12 +71,7 @@ You do not need to make a migration when you modify the method of a model.
 To manage your database, you can connect to the PostgreSQL interface by executing from a new terminal :
 
 ```
-sudo -u postgres_user psql postgres_db
-```
-We assume here that "postgres_user" and "postgres_db" are respectively the superuser and the name of a database created by default by PostgreSQL (usually both are simply "postgres"). The superuser name must be specified in the environment variable
-
-```
-$POSTGRES_DB_USER
+sudo -u postgres psql postgres
 ```
 
 After your first connection, don't forget to set a password for the "postgres" database role using the command :
@@ -76,7 +79,7 @@ After your first connection, don't forget to set a password for the "postgres" d
 ```
 \password postgres
 ```
-and give the password you want when prompted. 
+and give the password you want when prompted. "postgres" is a superuser created by PostgreSQL, and the name of the database created by default.  
 
 Register the value you chose as a password for postgres in the environment variable :
 
@@ -91,12 +94,6 @@ When you connect with the command given above, you will be connected to the post
 ```
 db_name being the database you want to connect to.  
 
-You can also list the existing roles using 
-
-```
-\du
-```
-
 **We assume from this point that you are connected on the PostgreSQL interface as a superuser.**  
 
 To create your database, execute the following command :
@@ -109,7 +106,26 @@ GRANT ALL PRIVILEGES ON DATABASE db_wphase TO django_user ;
 
 Replace django_user and django_password respectively by the values you chose for $WPHASE_DB_USER and $WPHASE_DB_PASSWORD.  
 
-For the database to be usable by Django, you have to run its server using the following command :
+You can also list the existing roles using 
+
+```
+\du
+```
+
+For the database to be usable by Django, you have to run its server. First you will have to define the path in which PostgreSQL stores the databases ; add to your .profile the variable :
+
+
+```
+$PGDATA
+```
+
+with the path you want. You may see that variable later by entering the command :
+
+```
+show data_directory ;
+```
+
+You can now run the PostgreSQL server by running :
 
 ```
 pg_ctl start
@@ -130,7 +146,7 @@ Do *NOT* make any changes in the structure of your database via the PostgreSQL i
 
 ### Runnning the Python scripts
 
-oth scripts take a .INI file as argument. To run them simply, execute the following commands :
+Both scripts take a .INI file as argument. To run them simply, execute the following commands :
 
 ```
 chmod +rwx wphase_ini_to_[db/run]
