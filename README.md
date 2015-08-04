@@ -1,5 +1,6 @@
-# Wphase catalog - Documentation
-*This document's purpose is to describe the wphase catalog's structure and help developers who want to improve it getting familiar with its architecture.*
+# Wphase catalog 
+
+Wphase catalog is a simple web form application to store and access W-phase solutions.
 
 ## Information
 This project is written using [Django 1.8](https://www.djangoproject.com/download/), [Python 3.2](https://www.python.org/downloads/) and [PostgreSQL 9.4](http://www.postgresql.org/). It currently uses the following libraries :
@@ -11,6 +12,7 @@ Please report bugs to <zacharie.duputel@unistra.fr>.
 
 
 ## Installation / Use
+
 In order for the app to work efficiently, the librairies mentionned above shall be installed ; please follow the links for more information about downloading these librairies.
 
 Please change line 254 from wphase_catalog/wphase/views.py. Replace it with :
