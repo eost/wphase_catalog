@@ -21,6 +21,7 @@ from django.conf import settings
 urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
     url(r'^wphase/', include('wphase.urls', namespace="wphase")),
+    url('^', include('wphase.urls', namespace="wphase")),
     url('^', include('django.contrib.auth.urls'))
 ]
 
