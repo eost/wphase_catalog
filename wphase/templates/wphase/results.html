@@ -103,6 +103,28 @@ Mtp           : {{ sol.w_mtp }}
             <tr><td> ref_flag </td><td> {{ sol.ref_flag }} </td></tr>
             <tr><td> ps_flag </td><td> {{ sol.ps_flag }} </td></tr>
 
+            {% if request.user.is_authenticated %}
+            <tr><th colspan=2 bgcolor="#87CEFA"> Complementary Information </th></tr>
+            <tr><td> SEED </td><td> {{ sol.seed }} </td></tr>
+            <tr><td> i_DMIN </td><td> {{ sol.i_dmin }} </td></tr>
+            <tr><td> i_DMAX </td><td> {{ sol.i_dmax }} </td></tr>
+            <tr><td> IDEC_2 </td><td> {{ sol.idec_2 }} </td></tr>
+            <tr><td> IDEC_3 </td><td> {{ sol.idec_3 }} </td></tr>
+            <tr><td> GFDIR </td><td> {{ sol.gfdir }} </td></tr>
+            <tr><td> TWPTT </td><td> {{ sol.twptt }} </td></tr>
+            <tr><td> p2p_fac_min </td><td> {{ sol.p2p_fac_min }} </td></tr>
+            <tr><td> p2p_fac_max </td><td> {{ sol.p2p_fac_max }} </td></tr>
+            <tr><td> tr_LENGTH_GLOBAL </td><td> {{ sol.tr_length_global }} </td></tr>
+            <tr><td> tr_LENGTH_REGIONAL </td><td> {{ sol.tr_length_regional }} </td></tr>
+            <tr><td> tr_DLAT </td><td> {{ sol.tr_dlat }} </td></tr>
+            <tr><td> tr_DLON </td><td> {{ sol.tr_dlon }} </td></tr>
+            <tr><td> tr_OPDFFILE </td><td> {{ sol.tr_opdffile }} </td></tr>
+            <tr><td> tr_YLIMAUTO </td><td> {{ sol.tr_ylimauto }} </td></tr>
+            <tr><td> tr_YLIMFIXED </td><td> {{ sol.tr_ylimfixed }} </td></tr>
+            <tr><td> tr_NC </td><td> {{ sol.tr_nc }} </td></tr>
+            <tr><td> tr_NL </td><td> {{ sol.tr_nl }} </td></tr>
+            {% endif %}
+
             <tr><th colspan=2 bgcolor="#87CEFA"> Centroid Moment Tensor {% if request.user.is_authenticated %}WCMT{% endif %} </th></tr>
             <tr><td> Mrr </td><td> {{ sol.w_mrr }} </td></tr>
             <tr><td> Mtt </td><td> {{ sol.w_mtt }} </td></tr>

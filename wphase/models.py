@@ -94,6 +94,25 @@ class Solution(models.Model):
     ref_flag     = models.BooleanField()
     ps_flag      = models.BooleanField()
 
+    # complementary information
+    seed               = models.CharField(max_length=50, null=True)
+    i_dmin             = models.FloatField(null=True)
+    i_dmax             = models.FloatField(null=True)
+    idec_2             = ArrayField(models.FloatField(null=True), null=True)
+    idec_3             = ArrayField(models.FloatField(null=True), null=True)
+    gfdir              = models.CharField(max_length=50, null=True)
+    twptt              = models.IntegerField(null=True)
+    p2p_fac_min        = models.FloatField(null=True)
+    p2p_fac_max        = models.FloatField(null=True)
+    tr_length_global   = models.IntegerField(null=True)
+    tr_length_regional = models.IntegerField(null=True)
+    tr_dlat            = models.FloatField(null=True)
+    tr_dlon            = models.FloatField(null=True)
+    tr_opdffile        = models.CharField(max_length=50, null=True)
+    tr_ylimauto        = models.NullBooleanField()
+    tr_ylimfixed       = ArrayField(models.IntegerField(null=True), null=True)
+    tr_nc              = models.IntegerField(null=True)
+    tr_nl              = models.IntegerField(null=True)
 
     # centroid moment tensor WCMT
     w_mrr           = models.FloatField()

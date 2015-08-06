@@ -110,6 +110,26 @@ def main(argv):
         ref_flag     = cfg.getboolean(s, 'ref_flag')
         ps_flag      = cfg.getboolean(s, 'ps_flag')
 
+        #       complementary information
+        seed               = cfg.get(s, 'SEED')
+        i_dmin             = cfg.getfloat(s, 'i_DMIN')
+        i_dmax             = cfg.getfloat(s, 'i_DMAX')
+        idec_2             = [float(val) for val in(cfg.get(s, 'IDEC_2')).split()]
+        idec_3             = [float(val) for val in(cfg.get(s, 'IDEC_3')).split()]
+        gfdir              = cfg.get(s, 'GFDIR')
+        twptt              = cfg.getint(s, 'TWPTT')
+        p2p_fac_min        = cfg.getfloat(s, 'p2p_fac_min')
+        p2p_fac_max        = cfg.getfloat(s, 'p2p_fac_max')
+        tr_length_global   = cfg.getint(s, 'tr_LENGTH_GLOBAL')
+        tr_length_regional = cfg.getint(s, 'tr_LENGTH_REGIONAL')
+        tr_dlat            = cfg.getfloat(s, 'tr_DLAT')
+        tr_dlon            = cfg.getfloat(s, 'tr_DLON')
+        tr_opdffile        = cfg.get(s, 'tr_OPDFFILE')
+        tr_ylimauto        = cfg.getboolean(s, 'tr_YLIMAUTO')
+        tr_ylimfixed       = [float(val) for val in(cfg.get(s, 'tr_YLIMFIXED')).split()]
+        tr_nc              = cfg.getint(s, 'tr_NC')
+        tr_nl              = cfg.getint(s, 'tr_NL')
+
         #       centroid moment tensor WCMT
         w_mrr           = cfg.getfloat(s, 'W_Mrr')
         w_mtt           = cfg.getfloat(s, 'W_Mtt')
@@ -247,6 +267,8 @@ def main(argv):
                                    ts_nit, dts_val, dts_min, dts_max, dts_step, hdsafe, 
                                    xy_nit, xy_dx, xy_nx, dz, mindep, xy_nopt, ib, priorsdrm0,
                                    azp, med_val_flag, op_pa_flag, ntr_flag, ref_flag, ps_flag,
+                                   seed, i_dmin, i_dmax, idec_2, idec_3, gfdir, twptt, p2p_fac_min, p2p_fac_max,
+                                   tr_length_global, tr_length_regional, tr_dlat, tr_dlon, tr_opdffile, tr_ylimauto, tr_ylimfixed, tr_nc, tr_nl,
                                    w_mrr, w_mtt, w_mpp, w_mrt, w_mrp, w_mtp, 
                                    w_time_shift, w_half_duration, w_latitude, w_longitude, w_depth, 
                                    w_m0, w_mw, dc_flag,
@@ -269,6 +291,8 @@ def main(argv):
                                %s, %s, %s, %s, %s, %s, %s,
                                %s, %s, %s, %s, %s, %s,
                                %s, %s, %s, %s, %s, %s, %s, %s,
+                               %s, %s, %s, %s, %s, %s, %s, %s, %s,
+                               %s, %s, %s, %s, %s, %s, %s, %s, %s,
                                %s, %s, %s, %s, %s, %s,
                                %s, %s, %s, %s, %s, 
                                %s, %s, %s,
@@ -291,6 +315,8 @@ def main(argv):
                ts_nit, dts_val, dts_min, dts_max, dts_step, hdsafe, 
                xy_nit, xy_dx, xy_nx, dz, mindep, xy_nopt, ib, priorsdrm0,
                azp, med_val_flag, op_pa_flag, ntr_flag, ref_flag, ps_flag,
+               seed, i_dmin, i_dmax, idec_2, idec_3, gfdir, twptt, p2p_fac_min, p2p_fac_max,
+               tr_length_global, tr_length_regional, tr_dlat, tr_dlon, tr_opdffile, tr_ylimauto, tr_ylimfixed, tr_nc, tr_nl,
                w_mrr, w_mtt, w_mpp, w_mrt, w_mrp, w_mtp, 
                w_time_shift, w_half_duration, w_latitude, w_longitude, w_depth, 
                w_m0, w_mw, dc_flag,
