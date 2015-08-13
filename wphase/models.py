@@ -95,12 +95,12 @@ class Solution(models.Model):
     ps_flag      = models.BooleanField()
 
     # complementary information
-    seed               = models.CharField(max_length=50, null=True)
+    seed               = models.CharField(max_length=250, null=True)
     i_dmin             = models.FloatField(null=True)
     i_dmax             = models.FloatField(null=True)
     idec_2             = ArrayField(models.FloatField(null=True), null=True)
     idec_3             = ArrayField(models.FloatField(null=True), null=True)
-    gfdir              = models.CharField(max_length=50, null=True)
+    gfdir              = models.CharField(max_length=250, null=True)
     twptt              = models.IntegerField(null=True)
     p2p_fac_min        = models.FloatField(null=True)
     p2p_fac_max        = models.FloatField(null=True)
@@ -108,7 +108,7 @@ class Solution(models.Model):
     tr_length_regional = models.IntegerField(null=True)
     tr_dlat            = models.FloatField(null=True)
     tr_dlon            = models.FloatField(null=True)
-    tr_opdffile        = models.CharField(max_length=50, null=True)
+    tr_opdffile        = models.CharField(max_length=250, null=True)
     tr_ylimauto        = models.NullBooleanField()
     tr_ylimfixed       = ArrayField(models.IntegerField(null=True), null=True)
     tr_nc              = models.IntegerField(null=True)
@@ -203,8 +203,8 @@ class Solution(models.Model):
     wz                   = models.FloatField()
 
     # inversion parameters
-    command_line = models.CharField(max_length=50)
-    ref_solution = models.CharField(max_length=20)
+    command_line = models.CharField(max_length=250)
+    ref_solution = models.CharField(max_length=250)
     cond_thre    = models.FloatField()
     damp_fac     = models.FloatField()
 
